@@ -22,8 +22,17 @@ spec:
           ports:
             - containerPort: 3002
           env:
-            - name: MONGO_URI
-              value: ${MONGO_URI}
+            - name: DB_HOST
+              value: ${DB_HOST}
+            - name: DB_PORT
+              value: ${DB_PORT}
+            - name: DB_USER
+              value: ${DB_USER}
+            - name: DB_PASSWORD
+              value: ${DB_PASSWORD}
+            - name: DB_NAME
+              value: ${DB_NAME}
+
 ---
 apiVersion: v1
 kind: Service
@@ -35,4 +44,4 @@ spec:
     app: ms-product
   ports:
     - port: 8080
-      targetPort: 5002
+      targetPort: 3002

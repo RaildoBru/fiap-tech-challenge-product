@@ -2,14 +2,14 @@ import Product from "../models/product.model.js";
 
 const ProductService = {
     getProducts: async () => {
-        return await Product.find();
+        return await Product.findAll();
     },
 
     findByIdProduct: async (id) => {
-        return await Product.findById(id);
+        return await Product.findByPk(id);
     },
 
-    createProduct: async(params) => {
+    createProduct: async (params) => {
         const values = {
             name: params.name,
             price: params.price,
@@ -19,14 +19,20 @@ const ProductService = {
         return await Product.create(values);
     },
 
-    updateProduct: async(id,params) => {
-        const paramUpdate = { 
+    updateProduct: async (id, params) => {
+        const paramUpdate = {
             name: params.name,
             price: params.price,
             description: params.description,
             category: params.category
         };
-        const updatedProduct = await Product.findByIdAndUpdate(id, paramUpdate, { new: true});
+
+        await Product.update(paramUpdate, {
+            where: { id: id }
+        });
+
+        // Fetch and return the updated product
+        const updatedProduct = await Product.findByPk(id);
 
         return updatedProduct;
     }
