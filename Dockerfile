@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3002
 
 # Comando para iniciar a aplicação
-CMD ["node", "index.js"]
+CMD ["npm", "run", "start:prod"]
