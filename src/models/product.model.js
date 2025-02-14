@@ -1,18 +1,48 @@
-import mongoose  from "mongoose";
+'use strict';
 
-const ProductSchema = new mongoose.Schema(
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '../../config/database.js';
+
+class Product extends Model { }
+
+Product.init(
     {
-        name : String,
-        price: Number,
-        description: String,
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        price: {
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: false
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
         category: {
-            type: String,
-            enum: ["Food", "Beverage", "Snack", "Dessert"],
+            type: DataTypes.ENUM('Food', 'Beverage', 'Snack', 'Dessert'),
+            allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
         }
-    },{collection: "Product"}
+    },
+    {
+        sequelize,
+        modelName: 'Product',
+        tableName: 'products',
+        timestamps: true
+    }
 );
-ProductSchema.set('timestamps', true);
-ProductSchema.set('versionKey', false);
-const Product = mongoose.model("Product", ProductSchema);
 
 export default Product;

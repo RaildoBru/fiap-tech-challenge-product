@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-product
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ms-product
+  template:
+    metadata:
+      labels:
+        app: ms-product
+    spec:
+      containers:
+        - name: ms-product
+          image: RaildoBru/fiap-tech-challenge-product
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DB_HOST
+              value: ${DB_HOST}
+            - name: DB_PORT
+              value: ${DB_PORT}
+            - name: DB_USER
+              value: ${DB_USER}
+            - name: DB_PASSWORD
+              value: ${DB_PASSWORD}
+            - name: DB_NAME
+              value: ${DB_NAME}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-product
+spec:
+  type: LoadBalancer
+  selector:
+    app: ms-product
+  ports:
+    - port: 8080
+      targetPort: 3002

@@ -1,34 +1,41 @@
-import { where } from "sequelize";
 import Product from "../models/product.model.js";
-import axios from "axios";
-import Enum from "enum";
 
-const getProducts = async () => {
-    return await Product.find();
-};
+const ProductService = {
+    getProducts: async () => {
+        return await Product.findAll();
+    },
 
-const findByIdProduct = async (id) => {
-    return await Product.findById(id);
-};
+    findByIdProduct: async (id) => {
+        return await Product.findByPk(id);
+    },
 
-const createProduct = async(params) => {
-    const values = {
-        name: params.name,
-        price: params.price,
-        description: params.description,
-        category: params.category
-    }
-    return await Product.create(params);
-}
+    createProduct: async (params) => {
+        const values = {
+            name: params.name,
+            price: params.price,
+            description: params.description,
+            category: params.category
+        }
+        return await Product.create(values);
+    },
 
-const updateProduct = async(id,params) => {
-        const paramUpdate = { 
+    updateProduct: async (id, params) => {
+        const paramUpdate = {
             name: params.name,
             price: params.price,
             description: params.description,
             category: params.category
         };
-    return await Product.findByIdAndUpdate(id, paramUpdate, { new: true});
+
+        await Product.update(paramUpdate, {
+            where: { id: id }
+        });
+
+        // Fetch and return the updated product
+        const updatedProduct = await Product.findByPk(id);
+
+        return updatedProduct;
+    }
 };
 
-export default { getProducts, findByIdProduct, updateProduct, createProduct }
+export default ProductService;
